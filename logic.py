@@ -12,6 +12,8 @@ class Pokemon:
         self.img = self.get_img()
         self.name = self.get_name()
         self.type = self.get_type()
+        self.HP = randint(200, 400)
+        self.power = randint(30, 60)
         Pokemon.pokemons[pokemon_trainer] = self
 
     # Метод для получения картинки покемона через API
@@ -52,13 +54,46 @@ class Pokemon:
 
     # Метод класса для получения информации
     def info(self):
-        return f"Имя твоего покеомона: {self.name}\n type:{self.type}"
+        return f"Имя твоего покеомона: {self.name}\n type:{self.type}\n здоровье: {self.HP}\n урон: {self.power}"
 
 
     # Метод класса для получения картинки покемона
     def show_img(self):
         return self.img
     
+    def atack(self, enemy):
+        if isinstance(enemy, Wizard): 
+            chance = randint(1, 5)
+            if chance == 1:
+                return "Покемон-Волшебник применил щит"
+        if enemy.HP > self.power:
+            enemy.HP -= self.power
+            return f"Сражение @{self.pokemon_trainer} с @{enemy.pokemon_trainer}\n здоровье @{enemy.pokemon_trainer}\n теперь {enemy.HP}"
+        elif enemy.HP <= 0: 
+            enemy.HP = 0
+            return f"Победа @{self.pokemon_trainer}\n ПОЗДРАВЛЬЯЕМ!!"
+        elif self.HP <= 0:
+            self.HP = 0
+            return f"Поражение @{self.pokemon_trainer}\n Повезет в следующий раз"
+class Wizard(Pokemon):
+    def info(self):
+        return f"У тебя Покемон-Волшебник \n" + super().info()
 
+class Fighter(Pokemon):
+    def atack(self, enemy):
+        super_power = randint(5, 15)
+        self.power += super_power
+        result = super().atack(enemy)
+        power -= super_power
+        return result + f"Боец применил супер силу {super_power}"
+    def info(self):
+        return f"У тебя Покемон-Боец \n" + super().info()
+if __name__ == '__main__':
+    wizard = Wizard("username1")
+    fighter = Fighter("username2")
 
-
+    print(Wizard.info())
+    print()
+    print(Fighter.info())
+    print()
+    print(Fighter.attack(wizard))
